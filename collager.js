@@ -89,7 +89,7 @@ var collager = (function () {
 
     return {
         preventResize : false,
-        maxScreenWidth : 1600,
+        maxScreenWidth : 2560,
         notResponsive : function (div,image) {
             return image            
         },
