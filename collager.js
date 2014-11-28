@@ -1,21 +1,7 @@
-/*
-$('.a-glossify-image-container').glossyPhotos({images:[{image:'%s',width:%s,height:%s},{image:'%s',width:%s,height:%s}...],useOuterSize:false});
 
-
-
-
-build 2014-07-07: removed responsive resizing logic
-build 2014-07-21: created new responsive resizing logic
-build 2014-07-28: implemented responsive logic as callback function
- - integrated default: "screenHeightResponsive" - default responsive logic
- - integrated default: "defaultResponsive" - default responsive logic
- - integrated: "notresponsive" - no automatic responsive resizing
-
-*/
-
-var glossyPhotos = (function () {
+var collager = (function () {
     /*
-    The GlossyPhotos helper functions
+    The collager helper functions
     */
     var _makerResponsive = function (div,image,scaleDivHeight) {
         
@@ -32,8 +18,8 @@ var glossyPhotos = (function () {
             screenHeight = window.screen.width;
         }
         
-        if (screenWidth > glossyPhotos.maxScreenWidth) {
-            finaleScale=glossyPhotos.maxScreenWidth/screenWidth;
+        if (screenWidth > collager.maxScreenWidth) {
+            finaleScale=collager.maxScreenWidth/screenWidth;
         }
             
         
@@ -123,11 +109,6 @@ var glossyPhotos = (function () {
 
 
 (function($){
-
-
-    
-    
-
     var calculate = function(div,image){
         var returnval = new Array();
         if (settings.useOuterSize){
@@ -153,8 +134,8 @@ var glossyPhotos = (function () {
     }
 
     var repaint = function() {
-        if (!glossyPhotos.preventResize){
-            $('.glossify-image').each(function(){
+        if (!collager.preventResize){
+            $('.collage-image').each(function(){
                 metrics=calculate($(this).parent('div'),this);
                 $(this).css('width',metrics.width);
                 $(this).css('height',metrics.height);
@@ -162,7 +143,7 @@ var glossyPhotos = (function () {
                 $(this).css('left',metrics.left);
 
             });
-            $('.glossify-overlay').each(function(){
+            $('.collage-overlay').each(function(){
                 var image={};
                 image.width=parseInt($(this).css('width'), 10);
                 image.height=parseInt($(this).css('height'),10);
@@ -185,7 +166,7 @@ var glossyPhotos = (function () {
     var initialSettings={scaleDivHeight:'none'};
     var settings={};
 
-    $.fn.glossyPhotos = function(options){
+    $.fn.collager = function(options){
 
         if (typeof options.repaint !== 'undefined') {
             repaint();
@@ -196,19 +177,19 @@ var glossyPhotos = (function () {
 
         var i=0;
         this.filter( "div" ).each(function(){
-            if ($(this).find("img.glossify-image").length === 0){
+            if ($(this).find("img.collage-image").length === 0){
                 if (typeof settings.images[i] !== 'undefined'){
                     
                     if(typeof settings.responsiveFunction === 'function'){
                         responsiveFunction=settings.responsiveFunction;
                     } else {
-                        responsiveFunction = glossyPhotos.defaultResponsive;
+                        responsiveFunction = collager.defaultResponsive;
                     }
                     settings.images[i] = responsiveFunction.call(undefined,$(this),settings.images[i]);
                     metrics=calculate($(this),settings.images[i]);
                     content=this.innerHTML;
-                    image='<img class="glossify-image" src="'+settings.images[i].image+'"style="position:absolute;top:'+metrics.top+';left:'+metrics.left+';width:'+metrics.width+'px;height:'+metrics.height+'px;"/>';
-                    this.innerHTML=image+'<div class="glossyimage-internal-content-wrapper" style="position:relative">'+content+'</div>';
+                    image='<img class="collage-image" src="'+settings.images[i].image+'"style="position:absolute;top:'+metrics.top+';left:'+metrics.left+';width:'+metrics.width+'px;height:'+metrics.height+'px;"/>';
+                    this.innerHTML=image+'<div class="collage-image-internal-content-wrapper" style="position:relative">'+content+'</div>';
                     ++i;
                 }
             }
@@ -216,15 +197,15 @@ var glossyPhotos = (function () {
         return this;
     };
 
-    $.fn.glossyOverlay = function(options){
+    $.fn.collageOverlay = function(options){
         var i=0;
         return this.filter( "div" ).each(function(){
-            if ($(this).find("div.glossify-overlay").length === 0){
+            if ($(this).find("div.collage-overlay").length === 0){
                 if (typeof settings.images[i] !== 'undefined'){
                     if (typeof options.overlays[i] !== 'undefined' && options.overlays[i].overlay){
                         metrics=calculate($(this),settings.images[i]);
                         content=this.innerHTML;
-                        overlay='<div class="glossify-overlay" style="position:absolute;top:0px;width:'+metrics.width+'px;height:'+metrics.height+'px;top:'+metrics.top+';left:'+metrics.left+';"/>'+options.overlays[i].overlay+'</div>';
+                        overlay='<div class="collage-overlay" style="position:absolute;top:0px;width:'+metrics.width+'px;height:'+metrics.height+'px;top:'+metrics.top+';left:'+metrics.left+';"/>'+options.overlays[i].overlay+'</div>';
                         this.innerHTML=content+overlay;
                     }
                     ++i;
